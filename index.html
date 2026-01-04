@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SQL Injection ve Güvenli Kimlik Doğrulama eğitim rehberi">
+    <title>Siber Güvenlik | SQL Injection & Güvenli Kimlik Doğrulama</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#home" class="nav-logo">
+                <span class="logo-icon">🛡️</span>
+                <span class="logo-text">Siber<span class="accent">Güvenlik</span></span>
+            </a>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="#home" class="nav-link active">Ana Sayfa</a></li>
+                <li><a href="#sql-injection" class="nav-link">SQL Injection</a></li>
+                <li><a href="#authentication" class="nav-link">Kimlik Doğrulama</a></li>
+                <li><a href="#demo" class="nav-link">Demo</a></li>
+                <li><a href="#resources" class="nav-link">Kaynaklar</a></li>
+            </ul>
+            <button class="nav-toggle" id="nav-toggle"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-bg">
+            <div class="cyber-grid"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-badge"><span class="badge-icon">🔒</span><span>Siber Güvenlik Eğitimi</span></div>
+            <h1 class="hero-title">Web Uygulamalarında<br><span class="gradient-text">Güvenlik Açıkları</span><br>ve
+                Korunma Yöntemleri</h1>
+            <p class="hero-description">SQL Injection saldırılarını ve güvenli kimlik doğrulama yöntemlerini kapsamlı
+                örneklerle öğrenin.</p>
+            <div class="hero-buttons">
+                <a href="#sql-injection" class="btn btn-primary"><span>SQL Injection</span></a>
+                <a href="#authentication" class="btn btn-secondary"><span>Kimlik Doğrulama</span></a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item"><span class="stat-number">70%</span><span class="stat-label">Web siteleri
+                        güvenlik açığına sahip</span></div>
+                <div class="stat-item"><span class="stat-number">#1</span><span class="stat-label">SQL Injection en
+                        yaygın saldırı</span></div>
+                <div class="stat-item"><span class="stat-number">$4.5M</span><span class="stat-label">Ortalama veri
+                        ihlali maliyeti</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SQL Injection Section -->
+    <section class="section" id="sql-injection">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Bölüm 1</span>
+                <h2 class="section-title">SQL Injection Nedir?</h2>
+                <p class="section-subtitle">SQL Injection, web uygulamalarındaki en tehlikeli güvenlik açıklarından
+                    biridir.</p>
+            </div>
+
+            <!-- Attack Flow Diagram -->
+            <div class="diagram-card">
+                <h3 class="diagram-title">🔄 SQL Injection Saldırı Akışı</h3>
+                <div class="attack-flow">
+                    <div class="flow-step">
+                        <div class="flow-icon hacker">👤</div>
+                        <div class="flow-label">Saldırgan</div>
+                        <div class="flow-desc">Kötü niyetli girdi hazırlar</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="flow-icon input">📝</div>
+                        <div class="flow-label">Giriş Formu</div>
+                        <div class="flow-desc">' OR '1'='1' --</div>
+                    </div>
+                    <div class="flow-arrow animate-pulse">→</div>
+                    <div class="flow-step">
+                        <div class="flow-icon server">🖥️</div>
+                        <div class="flow-label">Web Sunucusu</div>
+                        <div class="flow-desc">Girdiyi sorguya ekler</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="flow-icon database danger">🗄️</div>
+                        <div class="flow-label">Veritabanı</div>
+                        <div class="flow-desc">Manipüle edilmiş sorgu çalışır!</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Attack Types -->
+            <div class="attack-types">
+                <h3 class="subsection-title"><span class="icon">⚔️</span>Saldırı Türleri</h3>
+                <div class="types-grid">
+                    <div class="type-card">
+                        <div class="type-header"><span class="type-number">01</span>
+                            <h4>In-band SQLi</h4>
+                        </div>
+                        <p>En yaygın türdür. Saldırgan verileri doğrudan görür.</p>
+                        <ul class="type-list">
+                            <li><strong>Error-based:</strong> Hata mesajlarından bilgi toplama</li>
+                            <li><strong>Union-based:</strong> UNION sorguları ile veri çekme</li>
+                        </ul>
+                    </div>
+                    <div class="type-card">
+                        <div class="type-header"><span class="type-number">02</span>
+                            <h4>Blind SQLi</h4>
+                        </div>
+                        <p>Sonuçlar doğrudan görülmez, davranışlardan çıkarım yapılır.</p>
+                        <ul class="type-list">
+                            <li><strong>Boolean-based:</strong> True/False yanıtlar</li>
+                            <li><strong>Time-based:</strong> Gecikme sürelerinden çıkarım</li>
+                        </ul>
+                    </div>
+                    <div class="type-card">
+                        <div class="type-header"><span class="type-number">03</span>
+                            <h4>Out-of-band SQLi</h4>
+                        </div>
+                        <p>Farklı kanallar üzerinden iletişim sağlar.</p>
+                        <ul class="type-list">
+                            <li>DNS veya HTTP istekleri kullanır</li>
+                            <li>Veritabanı özelliklerine bağımlıdır</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Multi-Language Code Examples -->
+            <div class="code-examples">
+                <h3 class="subsection-title"><span class="icon">💻</span>Çoklu Dil Kod Örnekleri</h3>
+
+                <!-- Vulnerable Code -->
+                <div class="code-section">
+                    <div class="code-header-main">
+                        <span class="status-badge danger">❌ GÜVENSİZ KOD</span>
+                        <p>Bu kodlar SQL Injection saldırısına açıktır!</p>
+                    </div>
+                    <div class="code-tabs">
+                        <button class="code-tab active" data-lang="vuln-php">PHP</button>
+                        <button class="code-tab" data-lang="vuln-python">Python</button>
+                        <button class="code-tab" data-lang="vuln-nodejs">Node.js</button>
+                        <button class="code-tab" data-lang="vuln-java">Java</button>
+                        <button class="code-tab" data-lang="vuln-csharp">C#</button>
+                    </div>
+                    <div class="code-panels">
+                        <div class="code-panel active" id="vuln-php">
+                            <button class="copy-btn" onclick="copyCode(this)">📋 Kopyala</button>
+                            <pre><code><span class="comment">// ❌ PHP - Güvensiz Kod</span>
+<span class="variable">$username</span> = <span class="variable">$_POST</span>[<span class="string">'username'</span>];
+<span class="variable">$password</span> = <span class="variable">$_POST</span>[<span class="string">'password'</span>];
+
+<span class="comment">// Kullanıcı girişi doğrudan sorguya ekleniyor!</span>
+<span class="variable">$query</span> = <span class="string">"SELECT * FROM users 
+         WHERE username = '<span class="danger-text">$username</span>' 
+         AND password = '<span class="danger-text">$password</span>'"</span>;
+
+<span class="variable">$result</span> = <span class="function">mysqli_query</span>(<span class="variable">$conn</span>, <span class="variable">$query</span>);</code></pre>
+                        </div>
+                        <div class="code-panel" id="vuln-python">
+                            <button class="copy-btn" onclick="copyCode(this)">📋 Kopyala</button>
+                            <pre><code><span class="comment"># ❌ Python Flask - Güvensiz Kod</span>
+<span class="keyword">from</span> flask <span class="keyword">import</span> Flask, request
+<span class="keyword">import</span> sqlite3
+
+<span class="decorator">@app.route</span>(<span class="string">'/login'</span>, methods=[<span class="string">'POST'</span>])
+<span class="keyword">def</span> <span class="function">login</span>():
+    username = request.form[<span class="string">'username'</span>]
+    password = request.form[<span class="string">'password'</span>]
+    
+    <span class="comment"># String formatting ile SQL Injection riski!</span>
+    query = <span class="string">f"SELECT * FROM users WHERE username = '<span class="danger-text">{username}</span>' AND password = '<span class="danger-text">{password}</span>'"</span>
+    
+    cursor.execute(query)  <span class="comment"># Tehlikeli!</span></code></pre>
+                        </div>
+                        <div class="code-panel" id="vuln-nodejs">
+                            <button class="copy-btn" onclick="copyCode(this)">📋 Kopyala</button>
+                            <pre><code><span class="comment">// ❌ Node.js Express - Güvensiz Kod</span>
+<span class="keyword">const</span> express = <span class="function">require</span>(<span class="string">'express'</span>);
+<span class="keyword">const</span> mysql = <span class="function">require</span>(<span class="string">'mysql'</span>);
+
+app.<span class="function">post</span>(<span class="string">'/login'</span>, (req, res) => {
+    <span class="keyword">const</span> { username, password } = req.body;
+    
+    <span class="comment">// Template literal ile SQL Injection riski!</span>
+    <span class="keyword">const</span> query = <span class="string">`SELECT * FROM users 
+                   WHERE username = '<span class="danger-text">${username}</span>' 
+                   AND password = '<span class="danger-text">${password}</span>'`</span>;
+    
+    connection.<span class="function">query</span>(query, (err, results) => {
+        <span class="comment">// Tehlikeli sorgu çalıştırıldı!</span>
+    });
+});</code></pre>
+                        </div>
+                        <div class="code-panel" id="vuln-java">
+                            <button class="copy-btn" onclick="copyCode(this)">📋 Kopyala</button>
+                            <pre><code><span class="comment">// ❌ Java - Güvensiz Kod</span>
+<span class="keyword">public</span> User <span class="function">login</span>(String username, String password) {
+    <span class="comment">// String concatenation ile SQL Injection riski!</span>
+    String query = <span class="string">"SELECT * FROM users WHERE username = '"</span> 
+                 + <span class="danger-text">username</span> + <span class="string">"' AND password = '"</span> 
+                 + <span class="danger-text">password</span> + <span class="string">"'"</span>;
+    
+    Statement stmt = connection.<span class="function">createStatement</span>();
+    ResultSet rs = stmt.<span class="function">executeQuery</span>(query); <span class="comment">// Tehlikeli!</span>
+    
+    <span class="keyword">return</span> parseUser(rs);
+}</code></pre>
+                        </div>
+                        <div class="code-panel" id="vuln-csharp">
+                            <button class="copy-btn" onclick="copyCode(this)">📋 Kopyala</button>
+                            <pre><code><span class="comment">// ❌ C# .NET - Güvensiz Kod</span>
+<span class="keyword">public</span> User <span class="function">Login</span>(<span class="keyword">string</span> username, <span class="keyword">string</span> password)
+{
+    <span class="comment">// String interpolation ile SQL Injection riski!</span>
+    <span class="keyword">string</span> query = <span class="string">$@"SELECT * FROM Users 
+                      WHERE Username = '<span class="danger-text">{username}</span>' 
+                      AND Password = '<span class="danger-text">{password}</span>'"</span>;
+    
+    <span class="keyword">using</span> (SqlCommand cmd = <span class="keyword">new</span> SqlCommand(query, conn))
+    {
+        SqlDataReader reader = cmd.<span class="function">ExecuteReader</span>(); <span class="comment">// Tehlikeli!</span>
+    }
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Secure Code -->
+                <div class="code-section">
+                    <div class="code-header-main success">
+                        <span class="status-badge success">✅ GÜVENLİ KOD</span>
+                        <p>Prepared Statements kullanarak SQL Injection'dan korunun!</p>
+                    </div>
+                    <div class="code-tabs">
+                        <button class="code-tab active" data-lang="safe-php">PHP</button>
+                        <button class="code-tab" data-lang="safe-python">Python</button>
+                        <button class="code-tab" data-lang="safe-nodejs">Node.js</button>
+                        <button class="code-tab" data-lang="safe-java">Java</button>
+                        <button class="code-tab" data-lang="safe-csharp">C#</button>
+                    </div>
+                    <div class="code-panels">
+                        <div class="code-panel active" id="safe-php">
+                            <button class="copy-btn" onclick="copyCode(this)">📋 Kopyala</button>
+                            <pre><code><span class="comment">// ✅ PHP - Prepared Statement</span>
+<span class="variable">$username</span> = <span class="variable">$_POST</span>[<span class="string">'username'</span>];
+<span class="variable">$password</span> = <span class="variable">$_POST</span>[<span class="string">'password'</span>];
+
+<span class="comment">// Parametreli sorgu kullanılıyor</span>
+<span class="variable">$stmt</span> = <span class="variable">$conn</span>-><span class="function">prepare</span>(
+    <span class="string">"SELECT * FROM users WHERE username = <span class="safe-text">?</span> AND password = <span class="safe-text">?</span>"</span>
+);
+<span class="variable">$stmt</span>-><span class="function">bind_param</span>(<span class="string">"ss"</span>, <span class="variable">$username</span>, <span class="variable">$password</span>);
+<span class="variable">$stmt</span>-><span class="function">execute</span>();
+<span class="variable">$result</span> = <span class="variable">$stmt</span>-><span class="function">get_result</span>();
+
+<span class="comment">// Bonus: Şifre hash kontrolü</span>
+<span class="keyword">if</span> (<span class="function">password_verify</span>(<span class="variable">$password</span>, <span class="variable">$user</span>[<span class="string">'password_hash'</span>])) {
+    <span class="comment">// Giriş başarılı</span>
+}</code></pre>
+                        </div>
+                        <div class="code-panel" id="safe-python">
+                            <button class="copy-btn" onclick="copyCode(this)">📋 Kopyala</button>
+                            <pre><code><span class="comment"># ✅ Python Flask - Parametreli Sorgu</span>
+<span class="keyword">from</span> flask <span class="keyword">import</span> Flask, request
+<span class="keyword">import</span> sqlite3
+<span class="keyword">from</span> werkzeug.security <span class="keyword">import</span> check_password_hash
+
+<span class="decorator">@app.route</span>(<span class="string">'/login'</span>, methods=[<span class="string">'POST'</span>])
+<span class="keyword">def</span> <span class="function">login</span>():
+    username = request.form[<span class="string">'username'</span>]
+    password = request.form[<span class="string">'password'</span>]
+    
+    <span class="comment"># Parametreli sorgu kullanılıyor</span>
+    query = <span class="string">"SELECT * FROM users WHERE username = <span class="safe-text">?</span>"</span>
+    cursor.execute(query, <span class="safe-text">(username,)</span>)  <span class="comment"># Güvenli!</span>
+    
+    user = cursor.fetchone()
+    <span class="keyword">if</span> user <span class="keyword">and</span> check_password_hash(user[<span class="string">'password'</span>], password):
+        <span class="keyword">return</span> <span class="string">"Giriş başarılı"</span></code></pre>
+                        </div>
+                        <div class="code-panel" id="safe-nodejs">
+                            <button class="copy-btn" onclick="copyCode(this)">📋 Kopyala</button>
+                            <pre><code><span class="comment">// ✅ Node.js Express - Prepared Statement</span>
+<span class="keyword">const</span> express = <span class="function">require</span>(<span class="string">'express'</span>);
+<span class="keyword">const</span> mysql = <span class="function">require</span>(<span class="string">'mysql2'</span>);
+<span class="keyword">const</span> bcrypt = <span class="function">require</span>(<span class="string">'bcrypt'</span>);
+
+app.<span class="function">post</span>(<span class="string">'/login'</span>, <span class="keyword">async</span> (req, res) => {
+    <span class="keyword">const</span> { username, password } = req.body;
+    
+    <span class="comment">// Parametreli sorgu kullanılıyor</span>
+    <span class="keyword">const</span> query = <span class="string">'SELECT * FROM users WHERE username = <span class="safe-text">?</span>'</span>;
+    
+    connection.<span class="function">execute</span>(query, <span class="safe-text">[username]</span>, <span class="keyword">async</span> (err, results) => {
+        <span class="keyword">if</span> (results.length > <span class="number">0</span>) {
+            <span class="keyword">const</span> match = <span class="keyword">await</span> bcrypt.<span class="function">compare</span>(password, results[<span class="number">0</span>].password);
+            <span class="keyword">if</span> (match) res.<span class="function">send</span>(<span class="string">'Giriş başarılı'</span>);
+        }
+    });
+});</code></pre>
+                        </div>
+                        <div class="code-panel" id="safe-java">
+                            <button class="copy-btn" onclick="copyCode(this)">📋 Kopyala</button>
+                            <pre><code><span class="comment">// ✅ Java - PreparedStatement</span>
+<span class="keyword">public</span> User <span class="function">login</span>(String username, String password) {
+    <span class="comment">// PreparedStatement kullanılıyor</span>
+    String query = <span class="string">"SELECT * FROM users WHERE username = <span class="safe-text">?</span>"</span>;
+    
+    PreparedStatement pstmt = connection.<span class="function">prepareStatement</span>(query);
+    pstmt.<span class="function">setString</span>(<span class="number">1</span>, <span class="safe-text">username</span>);  <span class="comment">// Güvenli parametre</span>
+    
+    ResultSet rs = pstmt.<span class="function">executeQuery</span>();
+    
+    <span class="keyword">if</span> (rs.next()) {
+        String storedHash = rs.<span class="function">getString</span>(<span class="string">"password_hash"</span>);
+        <span class="keyword">if</span> (BCrypt.<span class="function">checkpw</span>(password, storedHash)) {
+            <span class="keyword">return</span> parseUser(rs);
+        }
+    }
+    <span class="keyword">return</span> <span class="keyword">null</span>;
+}</code></pre>
+                        </div>
+                        <div class="code-panel" id="safe-csharp">
+                            <button class="copy-btn" onclick="copyCode(this)">📋 Kopyala</button>
+                            <pre><code><span class="comment">// ✅ C# .NET - SqlParameter</span>
+<span class="keyword">public</span> User <span class="function">Login</span>(<span class="keyword">string</span> username, <span class="keyword">string</span> password)
+{
+    <span class="comment">// Parametreli sorgu kullanılıyor</span>
+    <span class="keyword">string</span> query = <span class="string">"SELECT * FROM Users WHERE Username = <span class="safe-text">@username</span>"</span>;
+    
+    <span class="keyword">using</span> (SqlCommand cmd = <span class="keyword">new</span> SqlCommand(query, conn))
+    {
+        <span class="comment">// Güvenli parametre ekleme</span>
+        cmd.Parameters.<span class="function">AddWithValue</span>(<span class="string">"@username"</span>, <span class="safe-text">username</span>);
+        
+        SqlDataReader reader = cmd.<span class="function">ExecuteReader</span>();
+        <span class="keyword">if</span> (reader.Read())
+        {
+            <span class="keyword">string</span> storedHash = reader[<span class="string">"PasswordHash"</span>].ToString();
+            <span class="keyword">if</span> (BCrypt.Net.BCrypt.<span class="function">Verify</span>(password, storedHash))
+                <span class="keyword">return</span> MapUser(reader);
+        }
+    }
+    <span class="keyword">return</span> <span class="keyword">null</span>;
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Prevention Methods -->
+            <div class="prevention-section">
+                <h3 class="subsection-title"><span class="icon">🛡️</span>Korunma Yöntemleri</h3>
+                <div class="prevention-grid">
+                    <div class="prevention-card">
+                        <div class="prevention-icon"><span>1</span></div>
+                        <h4>Prepared Statements</h4>
+                        <p>Parametreli sorgular kullanarak SQL enjeksiyonunu engelleyin.</p>
+                    </div>
+                    <div class="prevention-card">
+                        <div class="prevention-icon"><span>2</span></div>
+                        <h4>Girdi Doğrulama</h4>
+                        <p>Tüm kullanıcı girdilerini sunucu tarafında doğrulayın.</p>
+                    </div>
+                    <div class="prevention-card">
+                        <div class="prevention-icon"><span>3</span></div>
+                        <h4>Escape Karakterleri</h4>
+                        <p>Özel karakterleri kaçış dizileriyle değiştirin.</p>
+                    </div>
+                    <div class="prevention-card">
+                        <div class="prevention-icon"><span>4</span></div>
+                        <h4>En Az Yetki İlkesi</h4>
+                        <p>Veritabanı kullanıcısına sadece gerekli yetkileri verin.</p>
+                    </div>
+                    <div class="prevention-card">
+                        <div class="prevention-icon"><span>5</span></div>
+                        <h4>WAF Kullanımı</h4>
+                        <p>Web Application Firewall ile zararlı istekleri engelleyin.</p>
+                    </div>
+                    <div class="prevention-card">
+                        <div class="prevention-icon"><span>6</span></div>
+                        <h4>Hata Mesajları</h4>
+                        <p>Detaylı hata mesajlarını kullanıcıya göstermeyin.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Authentication Section -->
+    <section class="section auth-section" id="authentication">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Bölüm 2</span>
+                <h2 class="section-title">Güvenli Kimlik Doğrulama</h2>
+                <p class="section-subtitle">Kimlik doğrulama, kullanıcının iddia ettiği kişi olduğunu doğrulama
+                    sürecidir.</p>
+            </div>
+
+            <!-- AAA Diagram -->
+            <div class="auth-concepts">
+                <div class="concept-card">
+                    <div class="concept-icon">🔐</div>
+                    <h4>Authentication</h4>
+                    <p>Kimlik Doğrulama</p><span class="concept-desc">"Sen kimsin?"</span>
+                </div>
+                <div class="concept-arrow">→</div>
+                <div class="concept-card">
+                    <div class="concept-icon">🎫</div>
+                    <h4>Authorization</h4>
+                    <p>Yetkilendirme</p><span class="concept-desc">"Ne yapabilirsin?"</span>
+                </div>
+                <div class="concept-arrow">→</div>
+                <div class="concept-card">
+                    <div class="concept-icon">📝</div>
+                    <h4>Accounting</h4>
+                    <p>Hesap Tutma</p><span class="concept-desc">"Ne yaptın?"</span>
+                </div>
+            </div>
+
+            <!-- Auth Factors -->
+            <div class="auth-methods">
+                <h3 class="subsection-title"><span class="icon">🔑</span>Kimlik Doğrulama Faktörleri</h3>
+                <div class="methods-grid">
+                    <div class="method-card">
+                        <div class="method-header"><span class="method-icon">💭</span>
+                            <h4>Bildiğin Bir Şey</h4><span class="factor-badge">1. Faktör</span>
+                        </div>
+                        <div class="method-content">
+                            <ul>
+                                <li>Şifre / Parola</li>
+                                <li>PIN kodu</li>
+                                <li>Güvenlik soruları</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="method-card">
+                        <div class="method-header"><span class="method-icon">📱</span>
+                            <h4>Sahip Olduğun Bir Şey</h4><span class="factor-badge">2. Faktör</span>
+                        </div>
+                        <div class="method-content">
+                            <ul>
+                                <li>Akıllı telefon (SMS/OTP)</li>
+                                <li>Güvenlik anahtarı</li>
+                                <li>Akıllı kart</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="method-card">
+                        <div class="method-header"><span class="method-icon">👆</span>
+                            <h4>Olduğun Bir Şey</h4><span class="factor-badge">3. Faktör</span>
+                        </div>
+                        <div class="method-content">
+                            <ul>
+                                <li>Parmak izi</li>
+                                <li>Yüz tanıma</li>
+                                <li>İris tarama</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Password Hashing Comparison -->
+            <div class="hash-comparison-section">
+                <h3 class="subsection-title"><span class="icon">🔐</span>Şifre Hashleme Karşılaştırması</h3>
+                <div class="hash-table">
+                    <div class="hash-row header">
+                        <div class="hash-cell">Algoritma</div>
+                        <div class="hash-cell">Güvenlik</div>
+                        <div class="hash-cell">Hız</div>
+                        <div class="hash-cell">Salt</div>
+                        <div class="hash-cell">Öneri</div>
+                    </div>
+                    <div class="hash-row danger">
+                        <div class="hash-cell"><strong>MD5</strong></div>
+                        <div class="hash-cell">❌ Zayıf</div>
+                        <div class="hash-cell">⚡ Çok Hızlı</div>
+                        <div class="hash-cell">Yok</div>
+                        <div class="hash-cell">🚫 Kullanmayın!</div>
+                    </div>
+                    <div class="hash-row danger">
+                        <div class="hash-cell"><strong>SHA-1</strong></div>
+                        <div class="hash-cell">❌ Zayıf</div>
+                        <div class="hash-cell">⚡ Çok Hızlı</div>
+                        <div class="hash-cell">Yok</div>
+                        <div class="hash-cell">🚫 Kullanmayın!</div>
+                    </div>
+                    <div class="hash-row warning">
+                        <div class="hash-cell"><strong>SHA-256</strong></div>
+                        <div class="hash-cell">⚠️ Orta</div>
+                        <div class="hash-cell">⚡ Hızlı</div>
+                        <div class="hash-cell">Manuel</div>
+                        <div class="hash-cell">⚠️ Tek başına yetersiz</div>
+                    </div>
+                    <div class="hash-row success">
+                        <div class="hash-cell"><strong>bcrypt</strong></div>
+                        <div class="hash-cell">✅ Güçlü</div>
+                        <div class="hash-cell">🐢 Yavaş (iyi)</div>
+                        <div class="hash-cell">Otomatik</div>
+                        <div class="hash-cell">✅ Önerilen</div>
+                    </div>
+                    <div class="hash-row success">
+                        <div class="hash-cell"><strong>Argon2</strong></div>
+                        <div class="hash-cell">✅ En Güçlü</div>
+                        <div class="hash-cell">🐢 Ayarlanabilir</div>
+                        <div class="hash-cell">Otomatik</div>
+                        <div class="hash-cell">✅ En iyi seçim</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Best Practices -->
+            <div class="best-practices">
+                <h3 class="subsection-title"><span class="icon">✨</span>En İyi Uygulamalar</h3>
+                <div class="practices-list">
+                    <div class="practice-item">
+                        <div class="practice-number">01</div>
+                        <div class="practice-content">
+                            <h4>Çok Faktörlü Kimlik Doğrulama (MFA)</h4>
+                            <p>En az iki farklı faktör kullanın. TOTP tercih edin.</p>
+                        </div>
+                    </div>
+                    <div class="practice-item">
+                        <div class="practice-number">02</div>
+                        <div class="practice-content">
+                            <h4>Güvenli Oturum Yönetimi</h4>
+                            <p>HttpOnly ve Secure cookie flag'leri ekleyin.</p>
+                        </div>
+                    </div>
+                    <div class="practice-item">
+                        <div class="practice-number">03</div>
+                        <div class="practice-content">
+                            <h4>Brute Force Koruması</h4>
+                            <p>Başarısız giriş denemelerini sınırlayın.</p>
+                        </div>
+                    </div>
+                    <div class="practice-item">
+                        <div class="practice-number">04</div>
+                        <div class="practice-content">
+                            <h4>HTTPS Kullanımı</h4>
+                            <p>Tüm trafiği TLS ile şifreleyin.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Demo Section -->
+    <section class="section demo-section" id="demo">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">İnteraktif</span>
+                <h2 class="section-title">Canlı Demolar</h2>
+                <p class="section-subtitle">SQL Injection, şifre güvenliği ve hash karşılaştırmasını interaktif olarak
+                    deneyin.</p>
+            </div>
+
+            <div class="demo-tabs">
+                <button class="demo-tab active" data-tab="sql-demo">SQL Injection</button>
+                <button class="demo-tab" data-tab="password-demo">Şifre Gücü</button>
+                <button class="demo-tab" data-tab="hash-demo">Hash Karşılaştırma</button>
+                <button class="demo-tab" data-tab="brute-demo">Brute Force</button>
+                <button class="demo-tab" data-tab="generator-demo">Şifre Oluşturucu</button>
+            </div>
+
+            <!-- SQL Injection Demo -->
+            <div class="demo-content active" id="sql-demo">
+                <div class="demo-card">
+                    <div class="demo-header">
+                        <h3>🔓 SQL Injection Simülasyonu</h3>
+                        <p>Farklı saldırı tekniklerini deneyin</p>
+                    </div>
+                    <div class="demo-body">
+                        <div class="demo-form">
+                            <div class="form-group"><label>Kullanıcı Adı:</label><input type="text" id="demo-username"
+                                    placeholder="Kullanıcı adı..."></div>
+                            <div class="form-group"><label>Şifre:</label><input type="text" id="demo-password"
+                                    placeholder="Şifre..."></div>
+                            <button class="btn btn-primary" id="demo-login-btn">Giriş Yap</button>
+                        </div>
+                        <div class="demo-output">
+                            <h4>Oluşturulan SQL Sorgusu:</h4>
+                            <pre class="code-block"
+                                id="sql-output">SELECT * FROM users WHERE username = '' AND password = ''</pre>
+                            <div class="demo-result" id="demo-result"></div>
+                        </div>
+                    </div>
+                    <div class="demo-hints">
+                        <h4>💡 Saldırı Örnekleri:</h4>
+                        <div class="hint-chips">
+                            <button class="hint-chip" data-username="admin" data-password="' OR '1'='1">Basit
+                                Bypass</button>
+                            <button class="hint-chip" data-username="admin' --" data-password="x">Yorum Satırı</button>
+                            <button class="hint-chip" data-username="' UNION SELECT * FROM users --"
+                                data-password="">UNION Attack</button>
+                            <button class="hint-chip" data-username="'; DROP TABLE users; --" data-password="">DROP
+                                TABLE</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Password Strength Demo -->
+            <div class="demo-content" id="password-demo">
+                <div class="demo-card">
+                    <div class="demo-header">
+                        <h3>🔐 Şifre Güvenliği Kontrolü</h3>
+                    </div>
+                    <div class="demo-body">
+                        <div class="demo-form">
+                            <div class="form-group"><label>Şifre:</label><input type="text" id="password-check"
+                                    placeholder="Şifre girin..."></div>
+                        </div>
+                        <div class="password-strength-meter">
+                            <div class="strength-bar">
+                                <div class="strength-fill" id="strength-fill"></div>
+                            </div><span class="strength-text" id="strength-text">Şifre girin</span>
+                        </div>
+                        <div class="password-criteria">
+                            <div class="criteria-item" id="criteria-length"><span class="criteria-icon">○</span><span>En
+                                    az 8 karakter</span></div>
+                            <div class="criteria-item" id="criteria-upper"><span
+                                    class="criteria-icon">○</span><span>Büyük harf</span></div>
+                            <div class="criteria-item" id="criteria-lower"><span
+                                    class="criteria-icon">○</span><span>Küçük harf</span></div>
+                            <div class="criteria-item" id="criteria-number"><span
+                                    class="criteria-icon">○</span><span>Sayı</span></div>
+                            <div class="criteria-item" id="criteria-special"><span
+                                    class="criteria-icon">○</span><span>Özel karakter</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hash Comparison Demo -->
+            <div class="demo-content" id="hash-demo">
+                <div class="demo-card">
+                    <div class="demo-header">
+                        <h3>🔢 Hash Algoritmaları Karşılaştırması</h3>
+                        <p>Aynı metni farklı algoritmalarla hashleyin</p>
+                    </div>
+                    <div class="demo-body">
+                        <div class="demo-form">
+                            <div class="form-group"><label>Metin:</label><input type="text" id="hash-input"
+                                    placeholder="Hashlenecek metin..."></div>
+                        </div>
+                        <div class="hash-results">
+                            <div class="hash-result-item"><span class="hash-label">MD5:</span><code
+                                    id="hash-md5">-</code></div>
+                            <div class="hash-result-item"><span class="hash-label">SHA-1:</span><code
+                                    id="hash-sha1">-</code></div>
+                            <div class="hash-result-item"><span class="hash-label">SHA-256:</span><code
+                                    id="hash-sha256">-</code></div>
+                            <div class="hash-result-item"><span class="hash-label">SHA-512:</span><code
+                                    id="hash-sha512">-</code></div>
+                        </div>
+                        <div class="hash-note">
+                            <p>⚠️ <strong>Not:</strong> MD5 ve SHA-1 artık güvenli değildir. Şifreler için bcrypt veya
+                                Argon2 kullanın!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Brute Force Demo -->
+            <div class="demo-content" id="brute-demo">
+                <div class="demo-card">
+                    <div class="demo-header">
+                        <h3>⏱️ Brute Force Süre Hesaplayıcı</h3>
+                        <p>Şifrenizin kırılması ne kadar sürer?</p>
+                    </div>
+                    <div class="demo-body">
+                        <div class="demo-form">
+                            <div class="form-group"><label>Şifre:</label><input type="text" id="brute-input"
+                                    placeholder="Şifre girin..."></div>
+                        </div>
+                        <div class="brute-result">
+                            <div class="brute-time" id="brute-time">
+                                <span class="time-value">-</span>
+                                <span class="time-label">Tahmini kırılma süresi</span>
+                            </div>
+                            <div class="brute-details" id="brute-details">
+                                <div class="detail-item"><span>Karakter Seti:</span><span id="brute-charset">-</span>
+                                </div>
+                                <div class="detail-item"><span>Kombinasyon:</span><span id="brute-combo">-</span></div>
+                                <div class="detail-item"><span>Saniyede Deneme:</span><span>10 Milyar</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Password Generator Demo -->
+            <div class="demo-content" id="generator-demo">
+                <div class="demo-card">
+                    <div class="demo-header">
+                        <h3>🎲 Güvenli Şifre Oluşturucu</h3>
+                        <p>Rastgele güvenli şifre üretin</p>
+                    </div>
+                    <div class="demo-body">
+                        <div class="generator-output">
+                            <input type="text" id="generated-password" readonly
+                                value="Şifre üretmek için butona tıklayın">
+                            <button class="copy-btn-inline" onclick="copyGeneratedPassword()">📋</button>
+                        </div>
+                        <div class="generator-options">
+                            <div class="option-group">
+                                <label>Uzunluk: <span id="length-value">16</span></label>
+                                <input type="range" id="password-length" min="8" max="32" value="16">
+                            </div>
+                            <div class="option-checkboxes">
+                                <label><input type="checkbox" id="opt-upper" checked> Büyük Harf (A-Z)</label>
+                                <label><input type="checkbox" id="opt-lower" checked> Küçük Harf (a-z)</label>
+                                <label><input type="checkbox" id="opt-numbers" checked> Sayılar (0-9)</label>
+                                <label><input type="checkbox" id="opt-symbols" checked> Semboller (!@#$%)</label>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-full" onclick="generatePassword()">🎲 Yeni Şifre
+                            Üret</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resources Section -->
+    <section class="section resources-section" id="resources">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Kaynaklar</span>
+                <h2 class="section-title">Faydalı Kaynaklar</h2>
+            </div>
+            <div class="resources-grid">
+                <a href="https://owasp.org" target="_blank" class="resource-card">
+                    <div class="resource-icon">📚</div>
+                    <h4>OWASP</h4>
+                    <p>Web güvenliği için kapsamlı rehberler.</p>
+                </a>
+                <a href="https://portswigger.net/web-security" target="_blank" class="resource-card">
+                    <div class="resource-icon">🎓</div>
+                    <h4>PortSwigger Academy</h4>
+                    <p>Ücretsiz interaktif güvenlik eğitimi.</p>
+                </a>
+                <a href="https://haveibeenpwned.com" target="_blank" class="resource-card">
+                    <div class="resource-icon">🔍</div>
+                    <h4>Have I Been Pwned</h4>
+                    <p>Veri ihlali kontrolü.</p>
+                </a>
+            </div>
+            <div class="owasp-section">
+                <h3 class="subsection-title"><span class="icon">🏆</span>OWASP Top 10 (2021)</h3>
+                <div class="owasp-list">
+                    <div class="owasp-item"><span class="owasp-rank">A01</span><span class="owasp-name">Broken Access
+                            Control</span></div>
+                    <div class="owasp-item"><span class="owasp-rank">A02</span><span class="owasp-name">Cryptographic
+                            Failures</span></div>
+                    <div class="owasp-item highlight"><span class="owasp-rank">A03</span><span
+                            class="owasp-name">Injection (SQL, NoSQL)</span></div>
+                    <div class="owasp-item"><span class="owasp-rank">A04</span><span class="owasp-name">Insecure
+                            Design</span></div>
+                    <div class="owasp-item"><span class="owasp-rank">A05</span><span class="owasp-name">Security
+                            Misconfiguration</span></div>
+                    <div class="owasp-item highlight"><span class="owasp-rank">A07</span><span class="owasp-name">Auth
+                            Failures</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand"><span class="logo-icon">🛡️</span><span class="logo-text">Siber<span
+                            class="accent">Güvenlik</span></span>
+                    <p>SQL Injection ve Güvenli Kimlik Doğrulama Eğitimi</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 Siber Güvenlik Eğitimi - Okul Projesi</p>
+            </div>
+        </div>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
