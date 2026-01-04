@@ -573,6 +573,7 @@ app.<span class="function">post</span>(<span class="string">'/login'</span>, <sp
                 <button class="demo-tab" data-tab="hash-demo">Hash Karşılaştırma</button>
                 <button class="demo-tab" data-tab="brute-demo">Brute Force</button>
                 <button class="demo-tab" data-tab="generator-demo">Şifre Oluşturucu</button>
+                <button class="demo-tab" data-tab="auth-demo">Kimlik Doğrulama</button>
             </div>
 
             <!-- SQL Injection Demo -->
@@ -729,6 +730,114 @@ app.<span class="function">post</span>(<span class="string">'/login'</span>, <sp
                         </div>
                         <button class="btn btn-primary btn-full" onclick="generatePassword()">🎲 Yeni Şifre
                             Üret</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Authentication Demo -->
+            <div class="demo-content" id="auth-demo">
+                <div class="demo-card">
+                    <div class="demo-header">
+                        <h3>🔐 Kimlik Doğrulama Simülasyonu</h3>
+                        <p>Güvenli ve güvensiz giriş yöntemlerini karşılaştırın</p>
+                    </div>
+                    <div class="demo-body">
+                        <div class="auth-demo-container">
+                            <!-- Unsafe Login -->
+                            <div class="auth-demo-box unsafe">
+                                <div class="auth-demo-title">
+                                    <span class="status-icon">❌</span>
+                                    <h4>Güvensiz Giriş</h4>
+                                </div>
+                                <div class="auth-demo-form">
+                                    <div class="form-group">
+                                        <label>E-posta:</label>
+                                        <input type="email" id="unsafe-email" placeholder="kullanici@ornek.com">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Şifre:</label>
+                                        <input type="password" id="unsafe-password" placeholder="123456">
+                                    </div>
+                                    <button class="btn btn-danger btn-full" onclick="unsafeLogin()">Giriş Yap</button>
+                                </div>
+                                <div class="auth-demo-issues">
+                                    <p class="issue-title">⚠️ Güvenlik Sorunları:</p>
+                                    <ul>
+                                        <li>Şifre plain-text gönderiliyor</li>
+                                        <li>Rate limiting yok</li>
+                                        <li>Hesap kilitleme yok</li>
+                                        <li>2FA desteği yok</li>
+                                    </ul>
+                                </div>
+                                <div class="auth-demo-result" id="unsafe-result"></div>
+                            </div>
+
+                            <!-- Safe Login -->
+                            <div class="auth-demo-box safe">
+                                <div class="auth-demo-title">
+                                    <span class="status-icon">✅</span>
+                                    <h4>Güvenli Giriş (2FA)</h4>
+                                </div>
+                                <div class="auth-demo-form">
+                                    <div class="form-group">
+                                        <label>E-posta:</label>
+                                        <input type="email" id="safe-email" placeholder="kullanici@ornek.com">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Şifre:</label>
+                                        <input type="password" id="safe-password" placeholder="••••••••">
+                                    </div>
+                                    <div class="form-group otp-group" id="otp-group" style="display: none;">
+                                        <label>2FA Kodu:</label>
+                                        <div class="otp-inputs">
+                                            <input type="text" maxlength="1" class="otp-input" data-index="0">
+                                            <input type="text" maxlength="1" class="otp-input" data-index="1">
+                                            <input type="text" maxlength="1" class="otp-input" data-index="2">
+                                            <input type="text" maxlength="1" class="otp-input" data-index="3">
+                                            <input type="text" maxlength="1" class="otp-input" data-index="4">
+                                            <input type="text" maxlength="1" class="otp-input" data-index="5">
+                                        </div>
+                                        <p class="otp-hint">İpucu: Herhangi bir 6 haneli kod girin</p>
+                                    </div>
+                                    <button class="btn btn-success btn-full" id="safe-login-btn"
+                                        onclick="safeLogin()">Giriş Yap</button>
+                                </div>
+                                <div class="auth-demo-features">
+                                    <p class="feature-title">🛡️ Güvenlik Özellikleri:</p>
+                                    <ul>
+                                        <li>Şifre hash'lenerek saklanır</li>
+                                        <li>Rate limiting aktif</li>
+                                        <li>2FA doğrulama zorunlu</li>
+                                        <li>Oturum yönetimi güvenli</li>
+                                    </ul>
+                                </div>
+                                <div class="auth-demo-result" id="safe-result"></div>
+                            </div>
+                        </div>
+
+                        <!-- Session Info -->
+                        <div class="session-info-panel">
+                            <h4>📋 Oturum Bilgileri</h4>
+                            <div class="session-details">
+                                <div class="session-item">
+                                    <span class="session-label">Oturum Durumu:</span>
+                                    <span class="session-value" id="session-status">Giriş yapılmadı</span>
+                                </div>
+                                <div class="session-item">
+                                    <span class="session-label">Son Giriş:</span>
+                                    <span class="session-value" id="last-login">-</span>
+                                </div>
+                                <div class="session-item">
+                                    <span class="session-label">Başarısız Deneme:</span>
+                                    <span class="session-value" id="failed-attempts">0</span>
+                                </div>
+                                <div class="session-item">
+                                    <span class="session-label">Güvenlik Seviyesi:</span>
+                                    <span class="session-value" id="security-level">-</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-secondary btn-full" onclick="resetAuthDemo()">🔄 Sıfırla</button>
+                        </div>
                     </div>
                 </div>
             </div>

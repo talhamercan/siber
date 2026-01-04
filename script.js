@@ -311,5 +311,194 @@ document.querySelectorAll('.type-card, .prevention-card, .method-card, .practice
     observer.observe(el);
 });
 
+// ===== Authentication Demo =====
+let authState = {
+    failedAttempts: 0,
+    isLoggedIn: false,
+    step: 1, // 1: credentials, 2: 2FA
+    securityLevel: '-'
+};
+
+function unsafeLogin() {
+    const email = document.getElementById('unsafe-email')?.value;
+    const password = document.getElementById('unsafe-password')?.value;
+    const resultEl = document.getElementById('unsafe-result');
+
+    if (!email || !password) {
+        if (resultEl) {
+            resultEl.className = 'auth-demo-result warning';
+            resultEl.innerHTML = '⚠️ E-posta ve şifre gerekli!';
+        }
+        return;
+    }
+
+    // Simulate unsafe login - always succeeds with any credentials
+    authState.failedAttempts++;
+    updateSessionInfo();
+
+    if (resultEl) {
+        // Simulate security vulnerability - show password in plain text
+        resultEl.className = 'auth-demo-result danger';
+        resultEl.innerHTML = `⚠️ Giriş simüle edildi (GÜVENSİZ!)<br>
+            <small style="opacity:0.8">Şifre plain-text: "${password}"</small><br>
+            <small>Bu yöntem tehlikelidir!</small>`;
+    }
+
+    document.getElementById('session-status').textContent = '⚠️ Güvensiz oturum';
+    document.getElementById('session-status').style.color = '#f59e0b';
+    document.getElementById('last-login').textContent = new Date().toLocaleTimeString('tr-TR');
+    document.getElementById('security-level').textContent = '🔴 Düşük';
+    document.getElementById('security-level').style.color = '#ef4444';
+}
+
+function safeLogin() {
+    const email = document.getElementById('safe-email')?.value;
+    const password = document.getElementById('safe-password')?.value;
+    const resultEl = document.getElementById('safe-result');
+    const otpGroup = document.getElementById('otp-group');
+    const loginBtn = document.getElementById('safe-login-btn');
+
+    if (authState.step === 1) {
+        // Step 1: Validate credentials
+        if (!email || !password) {
+            if (resultEl) {
+                resultEl.className = 'auth-demo-result warning';
+                resultEl.innerHTML = '⚠️ E-posta ve şifre gerekli!';
+            }
+            return;
+        }
+
+        if (password.length < 8) {
+            if (resultEl) {
+                resultEl.className = 'auth-demo-result warning';
+                resultEl.innerHTML = '⚠️ Şifre en az 8 karakter olmalı!';
+            }
+            authState.failedAttempts++;
+            updateSessionInfo();
+            return;
+        }
+
+        // Show 2FA step
+        authState.step = 2;
+        otpGroup.style.display = 'block';
+        loginBtn.textContent = '🔐 2FA Doğrula';
+
+        if (resultEl) {
+            resultEl.className = 'auth-demo-result success';
+            resultEl.innerHTML = '✅ Kimlik bilgileri doğrulandı. 2FA kodu girin.';
+        }
+
+        // Setup OTP input auto-focus
+        setupOTPInputs();
+    } else if (authState.step === 2) {
+        // Step 2: Validate 2FA
+        const otpInputs = document.querySelectorAll('.otp-input');
+        let otpCode = '';
+        otpInputs.forEach(input => otpCode += input.value);
+
+        if (otpCode.length !== 6) {
+            if (resultEl) {
+                resultEl.className = 'auth-demo-result warning';
+                resultEl.innerHTML = '⚠️ 6 haneli 2FA kodu girin!';
+            }
+            return;
+        }
+
+        // Success!
+        authState.isLoggedIn = true;
+        authState.securityLevel = 'Yüksek';
+
+        if (resultEl) {
+            resultEl.className = 'auth-demo-result success';
+            resultEl.innerHTML = '✅ Giriş başarılı! 2FA doğrulaması tamamlandı.';
+        }
+
+        document.getElementById('session-status').textContent = '✅ Güvenli oturum aktif';
+        document.getElementById('session-status').style.color = '#22c55e';
+        document.getElementById('last-login').textContent = new Date().toLocaleTimeString('tr-TR');
+        document.getElementById('security-level').textContent = '🟢 Yüksek';
+        document.getElementById('security-level').style.color = '#22c55e';
+
+        loginBtn.textContent = '✅ Giriş Yapıldı';
+        loginBtn.disabled = true;
+    }
+}
+
+function setupOTPInputs() {
+    const otpInputs = document.querySelectorAll('.otp-input');
+
+    otpInputs.forEach((input, index) => {
+        input.value = '';
+
+        input.addEventListener('input', (e) => {
+            const value = e.target.value;
+            if (value && index < otpInputs.length - 1) {
+                otpInputs[index + 1].focus();
+            }
+        });
+
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && !input.value && index > 0) {
+                otpInputs[index - 1].focus();
+            }
+        });
+
+        input.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const paste = (e.clipboardData || window.clipboardData).getData('text');
+            const digits = paste.replace(/\D/g, '').slice(0, 6);
+            digits.split('').forEach((digit, i) => {
+                if (otpInputs[i]) otpInputs[i].value = digit;
+            });
+            if (otpInputs[digits.length - 1]) otpInputs[digits.length - 1].focus();
+        });
+    });
+
+    // Focus first input
+    if (otpInputs[0]) otpInputs[0].focus();
+}
+
+function updateSessionInfo() {
+    document.getElementById('failed-attempts').textContent = authState.failedAttempts;
+}
+
+function resetAuthDemo() {
+    // Reset state
+    authState = {
+        failedAttempts: 0,
+        isLoggedIn: false,
+        step: 1,
+        securityLevel: '-'
+    };
+
+    // Reset unsafe form
+    document.getElementById('unsafe-email').value = '';
+    document.getElementById('unsafe-password').value = '';
+    document.getElementById('unsafe-result').className = 'auth-demo-result';
+    document.getElementById('unsafe-result').innerHTML = '';
+
+    // Reset safe form
+    document.getElementById('safe-email').value = '';
+    document.getElementById('safe-password').value = '';
+    document.getElementById('safe-result').className = 'auth-demo-result';
+    document.getElementById('safe-result').innerHTML = '';
+    document.getElementById('otp-group').style.display = 'none';
+
+    const otpInputs = document.querySelectorAll('.otp-input');
+    otpInputs.forEach(input => input.value = '');
+
+    const loginBtn = document.getElementById('safe-login-btn');
+    loginBtn.textContent = 'Giriş Yap';
+    loginBtn.disabled = false;
+
+    // Reset session info
+    document.getElementById('session-status').textContent = 'Giriş yapılmadı';
+    document.getElementById('session-status').style.color = '';
+    document.getElementById('last-login').textContent = '-';
+    document.getElementById('failed-attempts').textContent = '0';
+    document.getElementById('security-level').textContent = '-';
+    document.getElementById('security-level').style.color = '';
+}
+
 // ===== Console Easter Egg =====
 console.log(`%c🛡️ Siber Güvenlik Eğitimi\n\nBu site eğitim amaçlıdır.\n⚠️ Bu teknikleri sadece izinli sistemlerde test edin!`, 'color: #6366f1; font-size: 14px; font-weight: bold;');
